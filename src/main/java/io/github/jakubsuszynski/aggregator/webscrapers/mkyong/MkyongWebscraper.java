@@ -5,12 +5,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Optional;
 
-@Component
 public class MkyongWebscraper {
 
 
@@ -35,7 +33,7 @@ public class MkyongWebscraper {
     private Optional<Document> getHTMLSourceCode() {
         Optional<Document> page = Optional.empty();
         try {
-            page = Optional.ofNullable(Jsoup.connect("https://www.google.com/").timeout(6000).get());
+            page = Optional.ofNullable(Jsoup.connect("https://www.mkyong.com/").timeout(6000).get());
         } catch (IOException e) {
             logger.warn("Connection to " + MKYONG + " failed");
         }
@@ -52,7 +50,7 @@ public class MkyongWebscraper {
 
     private void logIfFetched(Elements articlesInXML) {
         if (!articlesInXML.isEmpty()) {
-            logger.info("Articles from Mkyong fetched");
+            logger.info("Articles from " + MKYONG + " fetched");
         }
     }
 

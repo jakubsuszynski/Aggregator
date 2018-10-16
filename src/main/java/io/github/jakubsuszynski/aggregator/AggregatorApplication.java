@@ -1,6 +1,7 @@
 package io.github.jakubsuszynski.aggregator;
 
 import io.github.jakubsuszynski.aggregator.repository.ArticlesRepository;
+import io.github.jakubsuszynski.aggregator.webscrapers.javaworld.JavaWorldWebscraper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -21,6 +22,7 @@ public class AggregatorApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        new JavaWorldWebscraper().findUrlsToArticles().stream().forEach(System.out::println);
         //run commands
     }
 }

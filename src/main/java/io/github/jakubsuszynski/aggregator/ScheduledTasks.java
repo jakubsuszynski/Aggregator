@@ -14,7 +14,7 @@ public class ScheduledTasks {
 
     @Scheduled(cron = "* * * * * *")
     public void addArticle() {
-        mkyongDataProvider.saveArticles();
+//        mkyongDataProvider.saveArticles();
     }
 
 }
