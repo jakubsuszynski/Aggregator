@@ -23,6 +23,7 @@ public class Article {
     @Column(name = "website")
     private String website;
 
+
     public Article(LocalDateTime uploadDate, String title, String url, String photoUrl, String author, String website) {
         this.uploadDate = uploadDate;
         this.title = title;
