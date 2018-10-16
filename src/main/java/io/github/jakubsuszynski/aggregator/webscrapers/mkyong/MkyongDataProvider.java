@@ -1,4 +1,4 @@
-package io.github.jakubsuszynski.aggregator.webscrapers;
+package io.github.jakubsuszynski.aggregator.webscrapers.mkyong;
 
 import io.github.jakubsuszynski.aggregator.domain.Article;
 import io.github.jakubsuszynski.aggregator.service.ArticlesService;
@@ -14,17 +14,19 @@ public class MkyongDataProvider {
     @Autowired
     ArticlesService articlesService;
 
-    @Autowired
-    MkyongParser mkyongParser;
-
 
     public void saveArticles() {
+        MkyongParser mkyongParser = new MkyongParser();
 
         List<Article> uniqueArticles = mkyongParser.parseArticles().stream()
-                .filter(i -> articlesService.checkIfExistsByUploadDateAndTitle(i))
+                .filter(this::isPresentInDatabase)
                 .collect(Collectors.toList());
 
         articlesService.saveArticles(uniqueArticles);
 
+    }
+
+    private boolean isPresentInDatabase(Article i) {
+        return !articlesService.checkIfExistsByUploadDateAndTitle(i);
     }
 }

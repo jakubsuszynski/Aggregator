@@ -1,4 +1,4 @@
-package io.github.jakubsuszynski.aggregator.webscrapers;
+package io.github.jakubsuszynski.aggregator.webscrapers.mkyong;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Optional;
+
 @Component
 public class MkyongWebscraper {
 
@@ -25,7 +26,7 @@ public class MkyongWebscraper {
             Elements articlesInXML = getXmlArticles(page.get());
 
             logIfFetched(articlesInXML);
-            rawArticles = Optional.ofNullable(articlesInXML);
+            rawArticles = Optional.of(articlesInXML);
         }
         return rawArticles;
     }
@@ -34,15 +35,19 @@ public class MkyongWebscraper {
     private Optional<Document> getHTMLSourceCode() {
         Optional<Document> page = Optional.empty();
         try {
-            page = Optional.ofNullable(Jsoup.connect("https://www.mkyong.com/").timeout(6000).get());
+            page = Optional.ofNullable(Jsoup.connect("https://www.google.com/").timeout(6000).get());
         } catch (IOException e) {
-            logger.warn("Connection to Mkyong failed");
+            logger.warn("Connection to " + MKYONG + " failed");
         }
         return page;
     }
 
     private Elements getXmlArticles(Document page) {
-        return page.select("article");
+        Elements xmlArticles = page.select("article");
+        if (xmlArticles.isEmpty()) {
+            logger.info("No articles found on " + MKYONG);
+        }
+        return xmlArticles;
     }
 
     private void logIfFetched(Elements articlesInXML) {
