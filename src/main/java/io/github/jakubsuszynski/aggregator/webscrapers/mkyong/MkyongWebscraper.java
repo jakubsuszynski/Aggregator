@@ -5,10 +5,12 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Optional;
 
+@Component
 public class MkyongWebscraper {
 
 
@@ -16,15 +18,14 @@ public class MkyongWebscraper {
     private Logger logger = LoggerFactory.getLogger(MkyongWebscraper.class);
 
 
-    public Optional<Elements> fetchRawArticles() {
+    public Elements fetchRawArticles() {
 
-        Optional<Elements> rawArticles = Optional.empty();
+        Elements rawArticles = new Elements();
         Optional<Document> page = getHTMLSourceCode();
         if (page.isPresent()) {
-            Elements articlesInXML = getXmlArticles(page.get());
 
-            logIfFetched(articlesInXML);
-            rawArticles = Optional.of(articlesInXML);
+            rawArticles = getXmlArticles(page.get());
+            logIfFetched(rawArticles);
         }
         return rawArticles;
     }

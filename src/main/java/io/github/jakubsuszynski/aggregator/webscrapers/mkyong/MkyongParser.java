@@ -2,22 +2,25 @@ package io.github.jakubsuszynski.aggregator.webscrapers.mkyong;
 
 import io.github.jakubsuszynski.aggregator.domain.Article;
 import io.github.jakubsuszynski.aggregator.domain.ArticleBuilder;
+import org.hibernate.annotations.Cache;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
-
+@Component
 public class MkyongParser {
 
-
+    @Autowired
+    MkyongWebscraper mkyongWebscraper;
     private static final String MKYONG = "Mkyong.com";
 
     private Logger logger = LoggerFactory.getLogger(MkyongParser.class);
@@ -25,10 +28,8 @@ public class MkyongParser {
 
     public List<Article> parseArticles() {
         parsedArticles.clear();
-        MkyongWebscraper mkyongWebscraper = new MkyongWebscraper();
-        Optional<Elements> rawArticles = mkyongWebscraper.fetchRawArticles();
-
-        rawArticles.ifPresent(this::mapArticles);
+        Elements rawArticles = mkyongWebscraper.fetchRawArticles();
+        mapArticles(rawArticles);
         return parsedArticles;
     }
 

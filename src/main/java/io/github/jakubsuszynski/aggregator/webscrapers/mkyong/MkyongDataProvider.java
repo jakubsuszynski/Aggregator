@@ -14,12 +14,14 @@ import java.util.stream.Collectors;
 public class MkyongDataProvider {
 
     @Autowired
+    MkyongParser mkyongParser;
+
+    @Autowired
     ArticlesService articlesService;
     private Logger logger = LoggerFactory.getLogger(MkyongDataProvider.class);
 
 
-    public void saveArticles() {
-        MkyongParser mkyongParser = new MkyongParser();
+    public void scanAndSaveArticles() {
 
         List<Article> uniqueArticles = mkyongParser.parseArticles().stream()
                 .filter(this::isPresentInDatabase)
