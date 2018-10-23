@@ -1,19 +1,16 @@
 package io.github.jakubsuszynski.aggregator;
 
-import io.github.jakubsuszynski.aggregator.repository.ArticlesRepository;
-import org.jsoup.nodes.Document;
+import io.github.jakubsuszynski.aggregator.webscrapers.DataSaver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-@EnableScheduling
+//@EnableScheduling
 public class AggregatorApplication implements CommandLineRunner {
     @Autowired
-    ArticlesRepository articlesRepository;
-
+    DataSaver dataSaver;
 
     public static void main(String[] args) {
         SpringApplication.run(AggregatorApplication.class, args);
@@ -22,8 +19,8 @@ public class AggregatorApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-
         //run commands
+        dataSaver.scanAndSaveArticles();
     }
 
 

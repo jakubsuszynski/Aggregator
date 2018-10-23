@@ -7,9 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -20,28 +18,25 @@ public class JavaWorldWebscraper {
     private static final String JAVAWORLD_URL = "https://www.javaworld.com";
     private Logger logger = LoggerFactory.getLogger(JavaWorldWebscraper.class);
 
-    public List<Document> fetchRawArticles() {
+    public Map<Document, String> fetchRawArticles() {
 
-        List<String> urls = findUrlsToArticles();
+        Map<String, String> urls = findUrlsToArticles();
 
         return addArticlesToList(urls);
     }
 
-    private List<String> findUrlsToArticles() {
+    private Map<String, String> findUrlsToArticles() {
         return fetchArticlesUrls(getHTMLSourceCode());
     }
 
-    private List<String> fetchArticlesUrls(Document page) {
-        Map<String, String> urlAndPhotoUrl = page.getElementsByClass("river-well article").select("figure").select("a").stream()
-                .collect(Collectors.toMap(i->JAVAWORLD_URL + i.attr("href"), i->JAVAWORLD_URL + i.select("img").attr("src")));
+    private Map<String, String> fetchArticlesUrls(Document page) {
+        Map<String, String> urlAndPhotoUrlMap = page.getElementsByClass("river-well article").select("figure").select("a").stream()
+                .collect(Collectors.toMap(i -> i.attr("abs:href"), i -> i.select("img").attr("abs:data-original")));
 
-        List<String> urlsList = page.getElementsByClass("river-well article").select("figure").select("a").stream()
-                .map(i -> JAVAWORLD_URL + i.attr("href")).collect(Collectors.toList());
-
-        if (!urlsList.isEmpty()) {
+        if (urlAndPhotoUrlMap.isEmpty()) {
             logger.info("No articles found on " + JAVAWORLD);
         }
-        return urlsList;
+        return urlAndPhotoUrlMap;
     }
 
     private Document getHTMLSourceCode() {
@@ -54,16 +49,17 @@ public class JavaWorldWebscraper {
         return page;
     }
 
-    private List<Document> addArticlesToList(List<String> urls) {
-        List<Document> rawArticles = new ArrayList<>();
-        for (String url : urls) {
+    private Map<Document, String> addArticlesToList(Map<String, String> urls) {
+        Map<Document, String> documentAndPhotoUrl = new HashMap<>();
+
+        for (Map.Entry<String, String> url : urls.entrySet()) {
             try {
-                rawArticles.add(Jsoup.connect(url).timeout(6000).get());
+                documentAndPhotoUrl.put(Jsoup.connect(url.getKey()).timeout(6000).get(), url.getValue());
             } catch (IOException e) {
                 logger.warn("Connection to " + url + " failed");
             }
         }
-        return rawArticles;
+        return documentAndPhotoUrl;
     }
 
 

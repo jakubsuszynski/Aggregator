@@ -2,7 +2,7 @@ package io.github.jakubsuszynski.aggregator.webscrapers.mkyong;
 
 import io.github.jakubsuszynski.aggregator.domain.Article;
 import io.github.jakubsuszynski.aggregator.domain.ArticleBuilder;
-import org.hibernate.annotations.Cache;
+import io.github.jakubsuszynski.aggregator.webscrapers.Parser;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
@@ -16,8 +16,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+
 @Component
-public class MkyongParser {
+public class MkyongParser implements Parser {
 
     @Autowired
     MkyongWebscraper mkyongWebscraper;
