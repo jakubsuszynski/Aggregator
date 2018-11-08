@@ -36,18 +36,22 @@ public class MkyongParser implements Parser {
 
     private void mapArticles(Elements rawArticles) {
         try {
-            parsedArticles = rawArticles.stream().map(i -> new ArticleBuilder()
-                    .setAuthor(i.select("time").prev().text())
-                    .setPhotoUrl(i.select("img").attr("src"))
-                    .setTitle(i.select("h4").text())
-                    .setUrl(i.select("h4").select("a").attr("href"))
-                    .setWebsite(MKYONG)
-                    .setUploadDate(parseUploadDate(i))
-                    .build())
+            parsedArticles = rawArticles.stream().map(i -> parseSingleArticle(i))
                     .collect(Collectors.toList());
         } catch (IllegalArgumentException e) {
             logger.error("Problem with parsing article's upload date");
         }
+    }
+
+    private Article parseSingleArticle(Element i) {
+        return new ArticleBuilder()
+                .setAuthor(i.select("time").prev().text())
+                .setPhotoUrl(i.select("img").attr("src"))
+                .setTitle(i.select("h4").text())
+                .setUrl(i.select("h4").select("a").attr("href"))
+                .setWebsite(MKYONG)
+                .setUploadDate(parseUploadDate(i))
+                .build();
     }
 
     private LocalDateTime parseUploadDate(Element article) {

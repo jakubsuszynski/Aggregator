@@ -39,18 +39,22 @@ public class JavaWorldParser implements Parser {
     private void mapArticles(Map<Document, String> rawArticles) {
 
         try {
-            parsedArticles = rawArticles.entrySet().stream().map(i -> new ArticleBuilder()
-                    .setAuthor(i.getKey().select("span.fn").text())
-                    .setPhotoUrl(i.getValue())
-                    .setTitle(i.getKey().select("h1").text())
-                    .setUrl(i.getKey().select("input[name='url']").attr("value"))
-                    .setWebsite(JAVAWORLD)
-                    .setUploadDate(parseUploadDate(i.getKey()))
-                    .build())
+            parsedArticles = rawArticles.entrySet().stream().map(i -> parseSingleArticle(i))
                     .collect(Collectors.toList());
         } catch (IllegalArgumentException e) {
             logger.error("Problem with parsing article's upload date");
         }
+    }
+
+    private Article parseSingleArticle(Map.Entry<Document, String> i) {
+        return new ArticleBuilder()
+                .setAuthor(i.getKey().select("span.fn").text())
+                .setPhotoUrl(i.getValue())
+                .setTitle(i.getKey().select("h1").text())
+                .setUrl(i.getKey().select("input[name='url']").attr("value"))
+                .setWebsite(JAVAWORLD)
+                .setUploadDate(parseUploadDate(i.getKey()))
+                .build();
     }
 
 

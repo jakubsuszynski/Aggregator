@@ -36,7 +36,7 @@ public class MkyongWebscraper {
         try {
             page = Optional.ofNullable(Jsoup.connect("https://www.mkyong.com/").timeout(6000).get());
         } catch (IOException e) {
-            logger.warn("Connection to " + MKYONG + " failed");
+            logger.warn(String.format("Connection to %s failed", MKYONG));
         }
         return page;
     }

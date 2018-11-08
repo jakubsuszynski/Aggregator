@@ -20,7 +20,7 @@ public class AggregatorApplication implements CommandLineRunner {
     @Override
     public void run(String... args) {
         //run commands
-        dataSaver.scanAndSaveArticles();
+        dataSaver.saveFetchedArticles();
     }
 
 

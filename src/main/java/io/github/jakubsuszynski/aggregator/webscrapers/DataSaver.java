@@ -28,7 +28,7 @@ public class DataSaver {
 
     List<Article> uniqueArticles = new ArrayList<>();
 
-    public void scanAndSaveArticles() {
+    public void saveFetchedArticles() {
 
         scanMkyong();
         scanJavaWorld();
@@ -39,8 +39,8 @@ public class DataSaver {
 
         articlesService.saveArticles(uniqueArticles);
 
-        if(!uniqueArticles.isEmpty()){
-            logger.info(uniqueArticles.size() + " new articles saved");
+        if (!uniqueArticles.isEmpty()) {
+            logger.info(String.format("%d new articles saved", uniqueArticles.size()));
         }
 
     }

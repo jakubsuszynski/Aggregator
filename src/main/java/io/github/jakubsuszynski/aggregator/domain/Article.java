@@ -2,6 +2,7 @@ package io.github.jakubsuszynski.aggregator.domain;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "articles")
@@ -9,6 +10,9 @@ public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+
+
     @Column(name = "uploadDate")
     private LocalDateTime uploadDate;
     @Column(name = "title")
@@ -87,7 +91,23 @@ public class Article {
         this.url = url;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Article article = (Article) o;
+        return Objects.equals(uploadDate, article.uploadDate) &&
+                Objects.equals(title, article.title) &&
+                Objects.equals(url, article.url) &&
+                Objects.equals(photoUrl, article.photoUrl) &&
+                Objects.equals(author, article.author) &&
+                Objects.equals(website, article.website);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(uploadDate, title, url, photoUrl, author, website);
+    }
     @Override
     public String toString() {
         return "Article{" +

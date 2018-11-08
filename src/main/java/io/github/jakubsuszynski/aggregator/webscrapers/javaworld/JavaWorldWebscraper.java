@@ -44,7 +44,7 @@ public class JavaWorldWebscraper {
         try {
             page = Jsoup.connect(JAVAWORLD_URL).timeout(6000).get();
         } catch (IOException e) {
-            logger.warn("Connection to " + JAVAWORLD + " failed");
+            logger.warn(String.format("Connection to %s failed", JAVAWORLD));
         }
         return page;
     }
@@ -56,7 +56,7 @@ public class JavaWorldWebscraper {
             try {
                 documentAndPhotoUrl.put(Jsoup.connect(url.getKey()).timeout(6000).get(), url.getValue());
             } catch (IOException e) {
-                logger.warn("Connection to " + url + " failed");
+                logger.warn(String.format("Connection to %s failed", url));
             }
         }
         return documentAndPhotoUrl;
