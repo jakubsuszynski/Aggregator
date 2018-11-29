@@ -23,8 +23,8 @@ public class JavaWorldParser implements Parser {
 
     private static final String JAVAWORLD = "JavaWorld.com";
 
-    @Autowired
-    JavaWorldWebscraper javaWorldWebscraper;
+//    @Autowired
+    JavaWorldWebscraper javaWorldWebscraper = new JavaWorldWebscraper();
 
     private List<Article> parsedArticles = new ArrayList<>();
     private Logger logger = LoggerFactory.getLogger(getClass());

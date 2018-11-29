@@ -2,6 +2,7 @@ package io.github.jakubsuszynski.aggregator.webscrapers;
 
 import io.github.jakubsuszynski.aggregator.domain.Article;
 import io.github.jakubsuszynski.aggregator.service.ArticlesService;
+import io.github.jakubsuszynski.aggregator.webscrapers.javacodegeeks.JavaCodeGeeksParser;
 import io.github.jakubsuszynski.aggregator.webscrapers.javaworld.JavaWorldParser;
 import io.github.jakubsuszynski.aggregator.webscrapers.mkyong.MkyongParser;
 import org.slf4j.Logger;
@@ -20,6 +21,8 @@ public class DataSaver {
     MkyongParser mkyongParser;
     @Autowired
     JavaWorldParser javaWorldParser;
+    @Autowired
+    JavaCodeGeeksParser javaCodeGeeksParser;
 
     @Autowired
     ArticlesService articlesService;
@@ -32,14 +35,15 @@ public class DataSaver {
 
         scanMkyong();
         scanJavaWorld();
+        scanJavaCodeGeeks();
 
         uniqueArticles = uniqueArticles.stream()
-                .filter(this::isPresentInDatabase)
+                .filter(this::isUnique)
                 .collect(Collectors.toList());
 
         articlesService.saveArticles(uniqueArticles);
 
-            logger.info(String.format("%d new articles saved", uniqueArticles.size()));
+        logger.info(String.format("%d new articles saved", uniqueArticles.size()));
 
     }
 
@@ -52,7 +56,12 @@ public class DataSaver {
         uniqueArticles.addAll(javaWorldParser.parseArticles());
     }
 
-    private boolean isPresentInDatabase(Article i) {
+    private void scanJavaCodeGeeks() {
+        uniqueArticles.addAll(javaCodeGeeksParser.parseArticles());
+    }
+
+    private boolean isUnique(Article i) {
         return !articlesService.checkIfExistsByUploadDateAndTitle(i);
+//        return true;
     }
 }

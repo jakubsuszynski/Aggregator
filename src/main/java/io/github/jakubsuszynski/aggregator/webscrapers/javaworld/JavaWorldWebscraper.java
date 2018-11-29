@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Component
+//@Component
 public class JavaWorldWebscraper extends Webscraper {
 
     private static final String JAVAWORLD_URL = "https://www.javaworld.com";

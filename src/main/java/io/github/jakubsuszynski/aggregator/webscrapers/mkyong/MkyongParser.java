@@ -20,8 +20,8 @@ import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 @Component
 public class MkyongParser implements Parser {
 
-    @Autowired
-    MkyongWebscraper mkyongWebscraper;
+//    @Autowired
+    MkyongWebscraper mkyongWebscraper = new MkyongWebscraper();
     private static final String MKYONG = "Mkyong.com";
 
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -36,7 +36,7 @@ public class MkyongParser implements Parser {
 
     private void mapArticles(Elements rawArticles) {
         try {
-            parsedArticles = rawArticles.stream().map(i -> parseSingleArticle(i))
+            parsedArticles = rawArticles.stream().map(this::parseSingleArticle)
                     .collect(Collectors.toList());
         } catch (IllegalArgumentException e) {
             logger.error("Problem with parsing article's upload date");
