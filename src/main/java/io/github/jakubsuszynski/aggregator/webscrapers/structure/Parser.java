@@ -1,4 +1,4 @@
-package io.github.jakubsuszynski.aggregator.webscrapers;
+package io.github.jakubsuszynski.aggregator.webscrapers.structure;
 
 import io.github.jakubsuszynski.aggregator.domain.Article;
 

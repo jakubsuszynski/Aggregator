@@ -2,7 +2,7 @@ package io.github.jakubsuszynski.aggregator.webscrapers.mkyong;
 
 import io.github.jakubsuszynski.aggregator.domain.Article;
 import io.github.jakubsuszynski.aggregator.domain.ArticleBuilder;
-import io.github.jakubsuszynski.aggregator.webscrapers.Parser;
+import io.github.jakubsuszynski.aggregator.webscrapers.structure.Parser;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
@@ -24,7 +24,7 @@ public class MkyongParser implements Parser {
     MkyongWebscraper mkyongWebscraper;
     private static final String MKYONG = "Mkyong.com";
 
-    private Logger logger = LoggerFactory.getLogger(MkyongParser.class);
+    private Logger logger = LoggerFactory.getLogger(getClass());
     private List<Article> parsedArticles = new ArrayList<>();
 
     public List<Article> parseArticles() {

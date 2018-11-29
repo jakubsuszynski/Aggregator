@@ -24,7 +24,7 @@ public class DataSaver {
     @Autowired
     ArticlesService articlesService;
 
-    private Logger logger = LoggerFactory.getLogger(DataSaver.class);
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     List<Article> uniqueArticles = new ArrayList<>();
 
@@ -39,9 +39,7 @@ public class DataSaver {
 
         articlesService.saveArticles(uniqueArticles);
 
-        if (!uniqueArticles.isEmpty()) {
             logger.info(String.format("%d new articles saved", uniqueArticles.size()));
-        }
 
     }
 

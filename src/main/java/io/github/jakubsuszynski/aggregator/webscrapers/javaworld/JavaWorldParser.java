@@ -2,7 +2,7 @@ package io.github.jakubsuszynski.aggregator.webscrapers.javaworld;
 
 import io.github.jakubsuszynski.aggregator.domain.Article;
 import io.github.jakubsuszynski.aggregator.domain.ArticleBuilder;
-import io.github.jakubsuszynski.aggregator.webscrapers.Parser;
+import io.github.jakubsuszynski.aggregator.webscrapers.structure.Parser;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
@@ -27,7 +27,7 @@ public class JavaWorldParser implements Parser {
     JavaWorldWebscraper javaWorldWebscraper;
 
     private List<Article> parsedArticles = new ArrayList<>();
-    private Logger logger = LoggerFactory.getLogger(JavaWorldParser.class);
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     public List<Article> parseArticles() {
         parsedArticles.clear();
