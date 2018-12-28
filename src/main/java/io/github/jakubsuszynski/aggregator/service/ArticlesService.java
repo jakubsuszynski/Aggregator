@@ -9,7 +9,7 @@ public interface ArticlesService {
 
     List<Article> getAll();
 
-    Optional<Article> getById(Long id);
+    Article getById(Long id) throws RuntimeException;
 
     void saveArticle(Article article);
 

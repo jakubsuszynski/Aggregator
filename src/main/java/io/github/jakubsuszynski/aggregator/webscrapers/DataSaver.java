@@ -5,12 +5,14 @@ import io.github.jakubsuszynski.aggregator.service.ArticlesService;
 import io.github.jakubsuszynski.aggregator.webscrapers.javacodegeeks.JavaCodeGeeksParser;
 import io.github.jakubsuszynski.aggregator.webscrapers.javaworld.JavaWorldParser;
 import io.github.jakubsuszynski.aggregator.webscrapers.mkyong.MkyongParser;
+import io.github.jakubsuszynski.aggregator.webscrapers.structure.Parser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,13 +31,12 @@ public class DataSaver {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    List<Article> uniqueArticles = new ArrayList<>();
+    private List<Article> uniqueArticles = new ArrayList<>();
 
     public void saveFetchedArticles() {
+        List<Parser> parsers = Arrays.asList(mkyongParser, javaCodeGeeksParser, javaWorldParser);
 
-        scanMkyong();
-        scanJavaWorld();
-        scanJavaCodeGeeks();
+        parsers.forEach(i->uniqueArticles.addAll(i.parseArticles()));
 
         uniqueArticles = uniqueArticles.stream()
                 .filter(this::isUnique)
@@ -48,20 +49,7 @@ public class DataSaver {
     }
 
 
-    private void scanMkyong() {
-        uniqueArticles.addAll(mkyongParser.parseArticles());
-    }
-
-    private void scanJavaWorld() {
-        uniqueArticles.addAll(javaWorldParser.parseArticles());
-    }
-
-    private void scanJavaCodeGeeks() {
-        uniqueArticles.addAll(javaCodeGeeksParser.parseArticles());
-    }
-
     private boolean isUnique(Article i) {
         return !articlesService.checkIfExistsByUploadDateAndTitle(i);
-//        return true;
     }
 }

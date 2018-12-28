@@ -2,7 +2,9 @@ package io.github.jakubsuszynski.aggregator.domain;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "articles")
@@ -10,7 +12,6 @@ public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
 
 
     @Column(name = "uploadDate")
@@ -27,7 +28,39 @@ public class Article {
     @Column(name = "website")
     private String website;
 
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+
+    @JoinTable(name = "articles_tags",
+            joinColumns = { @JoinColumn(name = "article_id") },
+            inverseJoinColumns = { @JoinColumn(name = "tag_id") })
+    private Set<Tag> tags = new HashSet<>();
+
+    @Override
+    public String toString() {
+        return "Article{" +
+                "id=" + id +
+                ", uploadDate=" + uploadDate +
+                ", title='" + title + '\'' +
+                ", url='" + url + '\'' +
+                ", photoUrl='" + photoUrl + '\'' +
+                ", author='" + author + '\'' +
+                ", website='" + website + '\'' +
+                ", tags=" + tags +
+                '}';
+    }
+
     public Article() {
+    }
+
+    public Set<Tag> getTags() {
+        return tags;
     }
 
     public Article(LocalDateTime uploadDate, String title, String url, String photoUrl, String author, String website) {
@@ -108,13 +141,5 @@ public class Article {
     public int hashCode() {
         return Objects.hash(uploadDate, title, url, photoUrl, author, website);
     }
-    @Override
-    public String toString() {
-        return "Article{" +
-                "uploadDate=" + uploadDate +
-                ", title='" + title + '\'' +
-                ", url='" + url + '\'' +
-                ", photoUrl='" + photoUrl + '\'' +
-                '}';
-    }
+
 }
