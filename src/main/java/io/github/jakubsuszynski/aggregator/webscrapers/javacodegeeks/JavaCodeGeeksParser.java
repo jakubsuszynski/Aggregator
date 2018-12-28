@@ -3,6 +3,7 @@ package io.github.jakubsuszynski.aggregator.webscrapers.javacodegeeks;
 import io.github.jakubsuszynski.aggregator.domain.Article;
 import io.github.jakubsuszynski.aggregator.domain.ArticleBuilder;
 import io.github.jakubsuszynski.aggregator.webscrapers.structure.Parser;
+import io.github.jakubsuszynski.aggregator.webscrapers.util.TagsFinder;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
@@ -17,14 +18,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME;
-
 @Component
 public class JavaCodeGeeksParser implements Parser {
-    public static final String JAVACODEGEEKS = "JavaCodeGeeks.com";
-//    @Autowired
-    JavaCodeGeeksWebscraper javaCodeGeeksWebscraper = new JavaCodeGeeksWebscraper();
+    private static final String JAVACODEGEEKS = "JavaCodeGeeks.com";
+    //    @Autowired
+    private JavaCodeGeeksWebscraper javaCodeGeeksWebscraper = new JavaCodeGeeksWebscraper();
 
+    @Autowired
+    private TagsFinder tagsFinder;
     private List<Article> parsedArticles = new ArrayList<>();
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -38,7 +39,7 @@ public class JavaCodeGeeksParser implements Parser {
 
     private void mapArticles(Elements rawArticles) {
         try {
-            parsedArticles = rawArticles.stream().map(i -> parseSingleArticle(i))
+            parsedArticles = rawArticles.stream().map(this::parseSingleArticle)
                     .collect(Collectors.toList());
         } catch (IllegalArgumentException e) {
             logger.error("Problem with parsing article's upload date");
@@ -47,14 +48,21 @@ public class JavaCodeGeeksParser implements Parser {
 
     private Article parseSingleArticle(Element i) {
 
-        return new ArticleBuilder()
+        Article article = new ArticleBuilder()
                 .setAuthor(i.select(".post-meta-author").select("a").text())
                 .setPhotoUrl(i.select("img").attr("src"))
                 .setTitle(i.select("h2").select("a").text())
                 .setUrl(i.select("h2").select("a").attr("href"))
                 .setWebsite(JAVACODEGEEKS)
                 .setUploadDate(parseUploadDate(i))
+                .setLanguage("english")
                 .build();
+
+        tagsFinder.findTagsInTitle(article);
+
+
+        return article;
+
     }
 
     private LocalDateTime parseUploadDate(Element i) {
@@ -64,7 +72,7 @@ public class JavaCodeGeeksParser implements Parser {
         date = date.replace("nd", "");
         date = date.replace("rd", "");
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
-        return  LocalDate.parse(date, dateTimeFormatter).atStartOfDay();
+        return LocalDate.parse(date, dateTimeFormatter).atStartOfDay();
 
     }
 }

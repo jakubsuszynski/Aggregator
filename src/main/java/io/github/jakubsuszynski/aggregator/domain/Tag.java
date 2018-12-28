@@ -2,6 +2,7 @@ package io.github.jakubsuszynski.aggregator.domain;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -11,13 +12,25 @@ public class Tag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Tag tag1 = (Tag) o;
+        return Objects.equals(tag, tag1.tag);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tag);
+    }
+
     @Column(name = "tag")
     private String tag;
 
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
+                    CascadeType.ALL
             },
             mappedBy = "tags")
     private Set<Article> articles = new HashSet<>();

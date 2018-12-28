@@ -2,7 +2,6 @@ package io.github.jakubsuszynski.aggregator.service;
 
 import io.github.jakubsuszynski.aggregator.domain.Article;
 import io.github.jakubsuszynski.aggregator.repository.ArticlesRepository;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,10 +22,8 @@ public class ArticlesServiceImpl implements ArticlesService {
     }
 
     @Override
-    public Article getById(Long id) throws RuntimeException {
-        Article article = articlesRepository.findById(id).orElseThrow(() -> new RuntimeException("Article not found"));
-        Hibernate.initialize(article.getTags());
-        return article;
+    public Optional<Article> getById(Long id) {
+        return articlesRepository.findById(id);
     }
 
     @Override

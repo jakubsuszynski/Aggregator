@@ -9,6 +9,7 @@ public class ArticleBuilder {
     private String photoUrl;
     private String author;
     private String website;
+    private String language;
 
     public ArticleBuilder setUploadDate(LocalDateTime uploadDate) {
         this.uploadDate = uploadDate;
@@ -42,9 +43,13 @@ public class ArticleBuilder {
         this.website = website;
         return this;
 
+    }   public ArticleBuilder setLanguage(String language) {
+        this.language = language;
+        return this;
+
     }
 
     public Article build() {
-        return new Article(uploadDate, title, url, photoUrl, author, website);
+        return new Article(uploadDate, title, url, photoUrl, author, website, language);
     }
 }

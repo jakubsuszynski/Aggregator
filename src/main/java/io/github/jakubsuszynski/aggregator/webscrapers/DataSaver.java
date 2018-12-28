@@ -20,11 +20,11 @@ import java.util.stream.Collectors;
 public class DataSaver {
 
     @Autowired
-    MkyongParser mkyongParser;
+    private MkyongParser mkyongParser;
     @Autowired
-    JavaWorldParser javaWorldParser;
+    private JavaWorldParser javaWorldParser;
     @Autowired
-    JavaCodeGeeksParser javaCodeGeeksParser;
+    private JavaCodeGeeksParser javaCodeGeeksParser;
 
     @Autowired
     ArticlesService articlesService;
@@ -43,7 +43,6 @@ public class DataSaver {
                 .collect(Collectors.toList());
 
         articlesService.saveArticles(uniqueArticles);
-
         logger.info(String.format("%d new articles saved", uniqueArticles.size()));
 
     }

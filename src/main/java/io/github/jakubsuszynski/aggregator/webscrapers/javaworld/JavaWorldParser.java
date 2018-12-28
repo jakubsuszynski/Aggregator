@@ -3,6 +3,7 @@ package io.github.jakubsuszynski.aggregator.webscrapers.javaworld;
 import io.github.jakubsuszynski.aggregator.domain.Article;
 import io.github.jakubsuszynski.aggregator.domain.ArticleBuilder;
 import io.github.jakubsuszynski.aggregator.webscrapers.structure.Parser;
+import io.github.jakubsuszynski.aggregator.webscrapers.util.TagsFinder;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
@@ -23,9 +24,10 @@ public class JavaWorldParser implements Parser {
 
     private static final String JAVAWORLD = "JavaWorld.com";
 
-//    @Autowired
-    JavaWorldWebscraper javaWorldWebscraper = new JavaWorldWebscraper();
-
+    //    @Autowired
+    private JavaWorldWebscraper javaWorldWebscraper = new JavaWorldWebscraper();
+    @Autowired
+    private TagsFinder tagsFinder;
     private List<Article> parsedArticles = new ArrayList<>();
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -39,7 +41,7 @@ public class JavaWorldParser implements Parser {
     private void mapArticles(Map<Document, String> rawArticles) {
 
         try {
-            parsedArticles = rawArticles.entrySet().stream().map(i -> parseSingleArticle(i))
+            parsedArticles = rawArticles.entrySet().stream().map(this::parseSingleArticle)
                     .collect(Collectors.toList());
         } catch (IllegalArgumentException e) {
             logger.error("Problem with parsing article's upload date");
@@ -47,14 +49,20 @@ public class JavaWorldParser implements Parser {
     }
 
     private Article parseSingleArticle(Map.Entry<Document, String> i) {
-        return new ArticleBuilder()
+        Article article = new ArticleBuilder()
                 .setAuthor(i.getKey().select("span.fn").text())
                 .setPhotoUrl(i.getValue())
                 .setTitle(i.getKey().select("h1").text())
                 .setUrl(i.getKey().select("input[name='url']").attr("value"))
                 .setWebsite(JAVAWORLD)
                 .setUploadDate(parseUploadDate(i.getKey()))
+                .setLanguage("english")
                 .build();
+
+        tagsFinder.findTagsInTitle(article);
+
+
+        return article;
     }
 
 

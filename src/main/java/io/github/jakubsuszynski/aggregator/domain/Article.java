@@ -24,6 +24,8 @@ public class Article {
     private String photoUrl;
     @Column(name = "author")
     private String author;
+    @Column(name = "language")
+    private String language;
 
     @Column(name = "website")
     private String website;
@@ -31,10 +33,10 @@ public class Article {
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
     }
+    //Hibernate.initialize(article.getTags());
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
+                    CascadeType.ALL
             })
 
     @JoinTable(name = "articles_tags",
@@ -63,13 +65,14 @@ public class Article {
         return tags;
     }
 
-    public Article(LocalDateTime uploadDate, String title, String url, String photoUrl, String author, String website) {
+    public Article(LocalDateTime uploadDate, String title, String url, String photoUrl, String author, String website, String language) {
         this.uploadDate = uploadDate;
         this.title = title;
         this.url = url;
         this.photoUrl = photoUrl;
         this.author = author;
         this.website = website;
+        this.language = language;
     }
 
     public String getWebsite() {
