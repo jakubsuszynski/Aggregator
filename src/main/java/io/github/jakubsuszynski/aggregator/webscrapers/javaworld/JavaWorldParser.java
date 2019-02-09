@@ -3,7 +3,7 @@ package io.github.jakubsuszynski.aggregator.webscrapers.javaworld;
 import io.github.jakubsuszynski.aggregator.domain.Article;
 import io.github.jakubsuszynski.aggregator.domain.ArticleBuilder;
 import io.github.jakubsuszynski.aggregator.webscrapers.structure.Parser;
-import io.github.jakubsuszynski.aggregator.webscrapers.util.TagsFinder;
+import io.github.jakubsuszynski.aggregator.webscrapers.utils.TagFinder;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
@@ -24,10 +24,9 @@ public class JavaWorldParser implements Parser {
 
     private static final String JAVAWORLD = "JavaWorld.com";
 
-    //    @Autowired
-    private JavaWorldWebscraper javaWorldWebscraper = new JavaWorldWebscraper();
     @Autowired
-    private TagsFinder tagsFinder;
+    TagFinder tagFinder;
+    private JavaWorldWebscraper javaWorldWebscraper = new JavaWorldWebscraper();
     private List<Article> parsedArticles = new ArrayList<>();
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -59,9 +58,8 @@ public class JavaWorldParser implements Parser {
                 .setLanguage("english")
                 .build();
 
-        tagsFinder.findTagsInTitle(article);
 
-
+        article.setTags(tagFinder.findSomeTags(article.getTitle()));
         return article;
     }
 

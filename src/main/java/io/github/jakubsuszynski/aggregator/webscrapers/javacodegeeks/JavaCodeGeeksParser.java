@@ -3,7 +3,7 @@ package io.github.jakubsuszynski.aggregator.webscrapers.javacodegeeks;
 import io.github.jakubsuszynski.aggregator.domain.Article;
 import io.github.jakubsuszynski.aggregator.domain.ArticleBuilder;
 import io.github.jakubsuszynski.aggregator.webscrapers.structure.Parser;
-import io.github.jakubsuszynski.aggregator.webscrapers.util.TagsFinder;
+import io.github.jakubsuszynski.aggregator.webscrapers.utils.TagFinder;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
@@ -20,12 +20,14 @@ import java.util.stream.Collectors;
 
 @Component
 public class JavaCodeGeeksParser implements Parser {
+
     private static final String JAVACODEGEEKS = "JavaCodeGeeks.com";
-    //    @Autowired
-    private JavaCodeGeeksWebscraper javaCodeGeeksWebscraper = new JavaCodeGeeksWebscraper();
 
     @Autowired
-    private TagsFinder tagsFinder;
+    TagFinder tagFinder;
+
+    private JavaCodeGeeksWebscraper javaCodeGeeksWebscraper = new JavaCodeGeeksWebscraper();
+
     private List<Article> parsedArticles = new ArrayList<>();
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -58,8 +60,7 @@ public class JavaCodeGeeksParser implements Parser {
                 .setLanguage("english")
                 .build();
 
-        tagsFinder.findTagsInTitle(article);
-
+        article.setTags(tagFinder.findSomeTags(article.getTitle()));
 
         return article;
 

@@ -3,7 +3,7 @@ package io.github.jakubsuszynski.aggregator.webscrapers.mkyong;
 import io.github.jakubsuszynski.aggregator.domain.Article;
 import io.github.jakubsuszynski.aggregator.domain.ArticleBuilder;
 import io.github.jakubsuszynski.aggregator.webscrapers.structure.Parser;
-import io.github.jakubsuszynski.aggregator.webscrapers.util.TagsFinder;
+import io.github.jakubsuszynski.aggregator.webscrapers.utils.TagFinder;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
@@ -20,12 +20,11 @@ import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
 @Component
 public class MkyongParser implements Parser {
+    @Autowired
+    TagFinder tagFinder;
 
     private static final String MKYONG = "Mkyong.com";
-    //    @Autowired
     private MkyongWebscraper mkyongWebscraper = new MkyongWebscraper();
-    @Autowired
-    TagsFinder tagsFinder;
     private Logger logger = LoggerFactory.getLogger(getClass());
     private List<Article> parsedArticles = new ArrayList<>();
 
@@ -56,8 +55,7 @@ public class MkyongParser implements Parser {
                 .setLanguage("english")
                 .build();
 
-        tagsFinder.findTagsInTitle(article);
-
+        article.setTags(tagFinder.findSomeTags(article.getTitle()));
         return article;
     }
 

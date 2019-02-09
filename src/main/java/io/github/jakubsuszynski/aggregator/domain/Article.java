@@ -1,69 +1,46 @@
 package io.github.jakubsuszynski.aggregator.domain;
 
-import javax.persistence.*;
+import org.springframework.data.annotation.Id;
+
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
-@Entity
-@Table(name = "articles")
 public class Article {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-
-    @Column(name = "uploadDate")
-    private LocalDateTime uploadDate;
-    @Column(name = "title")
+    private String id;
     private String title;
-    @Column(name = "url")
     private String url;
-    @Column(name = "photoUrl")
     private String photoUrl;
-    @Column(name = "author")
+    private LocalDateTime uploadDate;
     private String author;
-    @Column(name = "language")
     private String language;
 
-    @Column(name = "website")
-    private String website;
+    private Set<String> tags;
 
-    public void setTags(Set<Tag> tags) {
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public Set<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<String> tags) {
         this.tags = tags;
     }
-    //Hibernate.initialize(article.getTags());
-    @ManyToMany(fetch = FetchType.LAZY,
-            cascade = {
-                    CascadeType.ALL
-            })
 
-    @JoinTable(name = "articles_tags",
-            joinColumns = { @JoinColumn(name = "article_id") },
-            inverseJoinColumns = { @JoinColumn(name = "tag_id") })
-    private Set<Tag> tags = new HashSet<>();
+    private String website;
 
-    @Override
-    public String toString() {
-        return "Article{" +
-                "id=" + id +
-                ", uploadDate=" + uploadDate +
-                ", title='" + title + '\'' +
-                ", url='" + url + '\'' +
-                ", photoUrl='" + photoUrl + '\'' +
-                ", author='" + author + '\'' +
-                ", website='" + website + '\'' +
-                ", tags=" + tags +
-                '}';
-    }
+
 
     public Article() {
     }
 
-    public Set<Tag> getTags() {
-        return tags;
-    }
 
     public Article(LocalDateTime uploadDate, String title, String url, String photoUrl, String author, String website, String language) {
         this.uploadDate = uploadDate;
@@ -83,7 +60,7 @@ public class Article {
         this.website = website;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
@@ -128,21 +105,17 @@ public class Article {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Article article = (Article) o;
-        return Objects.equals(uploadDate, article.uploadDate) &&
-                Objects.equals(title, article.title) &&
-                Objects.equals(url, article.url) &&
-                Objects.equals(photoUrl, article.photoUrl) &&
-                Objects.equals(author, article.author) &&
-                Objects.equals(website, article.website);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(uploadDate, title, url, photoUrl, author, website);
+    public String toString() {
+        return "Article{" +
+                "title='" + title + '\'' +
+                ", url='" + url + '\'' +
+                ", photoUrl='" + photoUrl + '\'' +
+                ", uploadDate=" + uploadDate +
+                ", author='" + author + '\'' +
+                ", language='" + language + '\'' +
+                ", tags=" + tags +
+                ", website='" + website + '\'' +
+                '}';
     }
 
 }
