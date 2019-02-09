@@ -1,13 +1,10 @@
 package io.github.jakubsuszynski.aggregator.domain;
 
-import org.springframework.data.annotation.Id;
-
 import java.time.LocalDateTime;
 import java.util.Set;
 
 public class Article {
 
-    @Id
     private String id;
     private String title;
     private String url;
@@ -35,7 +32,6 @@ public class Article {
     }
 
     private String website;
-
 
 
     public Article() {

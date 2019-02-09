@@ -1,6 +1,7 @@
 package io.github.jakubsuszynski.aggregator.webscrapers;
 
 import io.github.jakubsuszynski.aggregator.domain.Article;
+import io.github.jakubsuszynski.aggregator.service.ArticlesService;
 import io.github.jakubsuszynski.aggregator.webscrapers.javacodegeeks.JavaCodeGeeksParser;
 import io.github.jakubsuszynski.aggregator.webscrapers.javaworld.JavaWorldParser;
 import io.github.jakubsuszynski.aggregator.webscrapers.mkyong.MkyongParser;
@@ -24,13 +25,15 @@ public class DataSaver {
     private JavaWorldParser javaWorldParser;
     @Autowired
     private JavaCodeGeeksParser javaCodeGeeksParser;
-
+    @Autowired
+    ArticlesService articlesService;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     private List<Article> uniqueArticles = new ArrayList<>();
 
     public List<Article> saveFetchedArticles() {
+
         List<Parser> parsers = Arrays.asList(mkyongParser, javaCodeGeeksParser, javaWorldParser);
 
         parsers.forEach(i -> uniqueArticles.addAll(i.parseArticles()));
@@ -39,14 +42,15 @@ public class DataSaver {
                 .filter(this::isUnique)
                 .collect(Collectors.toList());
 
-//        articlesService.saveArticles(uniqueArticles);
+        articlesService.saveArticles(uniqueArticles);
+
         logger.info(String.format("%d new articles saved", uniqueArticles.size()));
+
         return uniqueArticles;
     }
 
 
     private boolean isUnique(Article i) {
-//        return !articlesService.checkIfExistsByUploadDateAndTitle(i);
-        return true;
+        return !articlesService.checkIfExistsByUploadDateAndTitle(i);
     }
 }
