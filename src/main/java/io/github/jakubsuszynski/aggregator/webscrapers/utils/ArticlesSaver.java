@@ -1,10 +1,7 @@
-package io.github.jakubsuszynski.aggregator.webscrapers;
+package io.github.jakubsuszynski.aggregator.webscrapers.utils;
 
 import io.github.jakubsuszynski.aggregator.domain.Article;
 import io.github.jakubsuszynski.aggregator.service.ArticlesService;
-import io.github.jakubsuszynski.aggregator.webscrapers.javacodegeeks.JavaCodeGeeksParser;
-import io.github.jakubsuszynski.aggregator.webscrapers.javaworld.JavaWorldParser;
-import io.github.jakubsuszynski.aggregator.webscrapers.mkyong.MkyongParser;
 import io.github.jakubsuszynski.aggregator.webscrapers.structure.Parser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,21 +9,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class DataSaver {
+public class ArticlesSaver {
+
+    private ArticlesService articlesService;
+
+    private List<Parser> parsers;
 
     @Autowired
-    private MkyongParser mkyongParser;
-    @Autowired
-    private JavaWorldParser javaWorldParser;
-    @Autowired
-    private JavaCodeGeeksParser javaCodeGeeksParser;
-    @Autowired
-    ArticlesService articlesService;
+    public ArticlesSaver(ArticlesService articlesService, List<Parser> parsers) {
+        this.articlesService = articlesService;
+        this.parsers = parsers;
+    }
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -34,7 +31,6 @@ public class DataSaver {
 
     public List<Article> saveFetchedArticles() {
 
-        List<Parser> parsers = Arrays.asList(mkyongParser, javaCodeGeeksParser, javaWorldParser);
 
         parsers.forEach(i -> uniqueArticles.addAll(i.parseArticles()));
 

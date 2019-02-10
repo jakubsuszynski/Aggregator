@@ -59,7 +59,7 @@ public class JavaWorldParser implements Parser {
                 .build();
 
 
-        article.setTags(tagFinder.findSomeTags(article.getTitle()));
+        article.setTags(tagFinder.findTagsInTitle(article.getTitle()));
         return article;
     }
 

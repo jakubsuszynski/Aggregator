@@ -8,4 +8,10 @@ public interface TagsService {
     List<Tag> getAllTags();
 
     void saveAll(List<Tag> tags);
+
+    void addTag(Tag tag);
+
+    void saveBasicTags();
+
+    boolean checkIfIsUnique(Tag tag);
 }

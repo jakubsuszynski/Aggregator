@@ -1,18 +1,17 @@
 package io.github.jakubsuszynski.aggregator;
 
-import io.github.jakubsuszynski.aggregator.webscrapers.DataSaver;
+import io.github.jakubsuszynski.aggregator.webscrapers.utils.ArticlesSaver;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ScheduledTasks {
 
     @Autowired
-    DataSaver dataSaver;
+    ArticlesSaver articlesSaver;
 
-    @Scheduled(cron = "* * * * * *")
+//    @Scheduled(cron = "* * * * * *")
     public void addArticle() {
-        dataSaver.saveFetchedArticles();
+        articlesSaver.saveFetchedArticles();
     }
 }

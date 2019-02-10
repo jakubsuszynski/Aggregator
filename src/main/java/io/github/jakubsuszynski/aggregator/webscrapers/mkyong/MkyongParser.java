@@ -55,7 +55,7 @@ public class MkyongParser implements Parser {
                 .setLanguage("english")
                 .build();
 
-        article.setTags(tagFinder.findSomeTags(article.getTitle()));
+        article.setTags(tagFinder.findTagsInTitle(article.getTitle()));
         return article;
     }
 
