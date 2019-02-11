@@ -24,4 +24,9 @@ public class ArticlesServiceImpl implements ArticlesService {
     public void saveArticles(List<Article> uniqueArticles) {
         articlesRepository.saveAll(uniqueArticles);
     }
+
+    @Override
+    public boolean isUnique(Article i) {
+        return !checkIfExistsByUploadDateAndTitle(i);
+    }
 }

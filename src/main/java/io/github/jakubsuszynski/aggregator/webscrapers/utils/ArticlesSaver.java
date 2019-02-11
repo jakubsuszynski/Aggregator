@@ -35,7 +35,7 @@ public class ArticlesSaver {
         parsers.forEach(i -> uniqueArticles.addAll(i.parseArticles()));
 
         uniqueArticles = uniqueArticles.stream()
-                .filter(this::isUnique)
+                .filter(i->articlesService.isUnique(i))
                 .collect(Collectors.toList());
 
         articlesService.saveArticles(uniqueArticles);
@@ -46,7 +46,5 @@ public class ArticlesSaver {
     }
 
 
-    private boolean isUnique(Article i) {
-        return !articlesService.checkIfExistsByUploadDateAndTitle(i);
-    }
+
 }

@@ -8,4 +8,6 @@ public interface ArticlesService {
     boolean checkIfExistsByUploadDateAndTitle(Article article);
 
     void saveArticles(List<Article> uniqueArticles);
+
+    boolean isUnique(Article article);
 }

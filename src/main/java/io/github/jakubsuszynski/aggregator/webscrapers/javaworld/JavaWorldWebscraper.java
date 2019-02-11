@@ -5,20 +5,18 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-//@Component
-public class JavaWorldWebscraper extends Webscraper {
+class JavaWorldWebscraper extends Webscraper {
 
-    private static final String JAVAWORLD_URL = "https://www.javaworld.com";
+    private static final String PAGE_URL = "https://www.javaworld.com";
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    public Map<Document, String> fetchRawArticles() {
+    Map<Document, String> fetchRawArticles() {
 
         Map<String, String> urls = findUrlsToArticles();
         logIfFetched(urls);
@@ -26,22 +24,24 @@ public class JavaWorldWebscraper extends Webscraper {
     }
 
     private Map<String, String> findUrlsToArticles() {
-        return fetchArticlesUrls(getHTMLSourceCode(JAVAWORLD_URL));
+        return fetchArticlesUrls(getHTMLSourceCode(PAGE_URL));
     }
 
     private Map<String, String> fetchArticlesUrls(Document page) {
-        Map<String, String> urlAndPhotoUrlMap = page.getElementsByClass("river-well article").select("figure").select("a").stream()
+        Map<String, String> urlAndPhotoUrlMap = page.getElementsByClass("river-well article").select("figure").select("a")
+                .stream()
+                .limit(5)
                 .collect(Collectors.toMap(i -> i.attr("abs:href"), i -> i.select("img").attr("abs:data-original")));
 
         if (urlAndPhotoUrlMap.isEmpty()) {
-            logger.info(String.format("No articles found on %s", JAVAWORLD_URL));
+            logger.info(String.format("No articles found on %s", PAGE_URL));
         }
         return urlAndPhotoUrlMap;
     }
 
     private void logIfFetched(Map<String, String> urls) {
         if (!urls.isEmpty()) {
-            logger.info(String.format("Articles from %s fetched", JAVAWORLD_URL));
+            logger.info(String.format("Articles from %s fetched", PAGE_URL));
         }
     }
 
